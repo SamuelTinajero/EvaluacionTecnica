@@ -165,15 +165,52 @@ En la pantalla de login encontrarás **las credenciales visibles** para facilita
 ## 📁 Estructura del repositorio
 
 ```
-castores-inventario/
-├── src/                    # Código fuente de la aplicación
+EvaluacionTecnica/
+├── src/                                        # Código fuente de la aplicación
 ├── SCRIPTS/
-│   └── schema.sql          # Script de creación y semilla de la base de datos
+│   ├── schema.sql                              # Esquema completo de la BD + datos semilla
+│   ├── diagrama.png                            # Diagrama relacional de la base de datos
+│   ├── CONSULTA15.sql                          # Productos que tienen al menos una venta
+│   ├── CONSULTA16.sql                          # Productos con ventas y cantidad total vendida
+│   └── CONSULTA17.sql                          # Todos los productos con suma total ($) vendida
 ├── Recursos/
-│   └── mssql-jdbc_auth-12.6.1.x64.dll   # Driver de autenticación SQL Server
-├── pom.xml                 # Configuración de Maven y perfiles
-└── README.md               # Este archivo
+│   ├── mssql-jdbc_auth-12.6.1.x64.dll         # Driver de autenticación SQL Server
+│   └── Definiciones SQL.pdf                    # Definiciones teóricas: JOIN, TRIGGER, SP
+├── pom.xml                                     # Configuración de Maven y perfiles de conexión
+└── README.md                                   # Este archivo
 ```
+---
+ 
+## 🗂️ Recursos adicionales
+
+### 📊 Diagrama relacional
+ 
+El diagrama de la base de datos se encuentra en:
+ 
+📎 [`SCRIPTS/diagrama.png`](./SCRIPTS/diagrama.png)
+ 
+---
+ 
+### 📄 Definiciones SQL
+ 
+Las respuestas teóricas sobre **JOIN**, **TRIGGER** y **Stored Procedures** se encuentran en:
+ 
+📎 [`Recursos/Definiciones SQL.pdf`](./Recursos/Definiciones%20SQL.pdf)
+ 
+---
+ 
+### 🔍 Consultas SQL (Ejercicio 1)
+ 
+Las consultas requeridas en la evaluación se encuentran en la carpeta `SCRIPTS/`:
+ 
+| Archivo | Descripción |
+|---------|-------------|
+| [`CONSULTA15.sql`](./SCRIPTS/CONSULTA15.sql) | Traer todos los productos que tengan al menos una venta |
+| [`CONSULTA16.sql`](./SCRIPTS/CONSULTA16.sql) | Productos con ventas y la cantidad total vendida por producto |
+| [`CONSULTA17.sql`](./SCRIPTS/CONSULTA17.sql) | Todos los productos (con o sin ventas) y la suma total en $ vendida |
+ 
+---
+
 
 ---
 
