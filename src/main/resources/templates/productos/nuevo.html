@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo Producto - Castores Inventario</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1a5490;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/home">
+                <i class="bi bi-box2"></i> Castores Inventario
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/inventario">Inventario</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/productos/nuevo">Nuevo Producto</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/inventario/entrada">Entradas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/movimientos">Historial</a>
+                    </li>
+                    <li class="nav-item ms-3">
+                        <span class="text-white">
+                            <sec:authentication name="principal.correo" />
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <form th:action="@{/logout}" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-outline-light btn-sm ms-2">
+                                <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <main class="container my-5">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card shadow">
+                    <div class="card-header"
+                        th:classappend="${producto.idProducto != null} ? 'bg-warning text-dark' : 'bg-success text-white'">
+                        <h4 class="mb-0">
+                            <i class="bi"
+                                th:classappend="${producto.idProducto != null} ? 'bi-pencil-square' : 'bi-plus-circle'"></i>
+                            <span
+                                th:text="${producto.idProducto != null} ? 'Editar Producto' : 'Registrar Nuevo Producto'"></span>
+                        </h4>
+                    </div>
+
+                    <div class="card-body p-4">
+                        <div th:if="${producto.idProducto == null}" class="alert alert-info" role="alert">
+                            <i class="bi bi-info-circle"></i>
+                            El stock inicial será 0. Los movimientos de inventario se registran por separado.
+                        </div>
+
+                        <form
+                            th:action="${producto.idProducto != null} ? @{/productos/actualizar} : @{/productos/guardar}"
+                            th:object="${producto}" method="post">
+
+                            <input type="hidden" th:field="*{idProducto}" />
+                            <input type="hidden" th:field="*{stock}" />
+                            <input type="hidden" th:field="*{estatus}" />
+                            <input type="hidden" th:field="*{fechaCreacion}" />
+                            <input type="hidden" th:field="*{creadoPor}" /> ```
+
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">Nombre del Producto <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" th:field="*{nombre}"
+                                    placeholder="Ej: Nombre del producto" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="descripcion" class="form-label">Descripción</label>
+                                <textarea class="form-control" th:field="*{descripcion}" rows="4"
+                                    placeholder="Descripción del producto (opcional)"></textarea>
+                            </div>
+
+                            <hr>
+
+                            <div class="d-flex justify-content-between">
+                                <a th:href="@{/inventario}" class="btn btn-secondary">
+                                    <i class="bi bi-arrow-left"></i> Cancelar
+                                </a>
+
+                                <div>
+                                    <th:block th:if="${producto.idProducto == null}">
+                                        <button type="submit" class="btn btn-success me-2">
+                                            <i class="bi bi-check-circle"></i> Guardar Producto
+                                        </button>
+                                        <button type="submit" name="accion" value="nuevo" class="btn btn-primary">
+                                            <i class="bi bi-plus-square"></i> Guardar y Nuevo
+                                        </button>
+                                    </th:block>
+
+                                    <th:block th:if="${producto.idProducto != null}">
+                                        <button type="submit" class="btn btn-warning text-dark fw-bold">
+                                            <i class="bi bi-arrow-clockwise"></i> Actualizar Registro
+                                        </button>
+                                    </th:block>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-light border-top mt-5 py-4 text-center text-muted">
+        <p class="m-0">&copy; 2026 Grupo Castores. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

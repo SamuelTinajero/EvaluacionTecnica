@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Entrada - Castores Inventario</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1a5490;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/home">
+                <i class="bi bi-box2"></i> Castores Inventario
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/inventario">Inventario</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/productos/nuevo">Nuevo Producto</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/inventario/entrada">Entradas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/movimientos">Historial</a>
+                    </li>
+                    <li class="nav-item ms-3">
+                        <span class="text-white"><sec:authentication name="principal.correo" /></span>
+                    </li>
+                    <li class="nav-item">
+                        <form th:action="@{/logout}" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-outline-light btn-sm ms-2">
+                                <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container my-5">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <!-- Mensajes de error/éxito -->
+                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-circle"></i> <span th:text="${error}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <div th:if="${exito}" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle"></i> <span th:text="${exito}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+
+                <div class="card shadow">
+                    <div class="card-header bg-info text-white">
+                        <h4 class="mb-0"><i class="bi bi-arrow-down-circle"></i> Registrar Entrada de Stock</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <form th:action="@{/inventario/entrada}" method="post">
+                            <div class="mb-3">
+                                <label for="idProducto" class="form-label">Producto <span class="text-danger">*</span></label>
+                                <select class="form-select" id="idProducto" name="idProducto" required>
+                                    <option value="">-- Selecciona un producto --</option>
+                                    <option th:each="p : ${productos}" th:value="${p.idProducto}">
+                                        <span th:text="${p.nombre}"></span> - Stock actual: <span th:text="${p.stock}"></span>
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="cantidad" class="form-label">Cantidad a Recibir <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="cantidad" name="cantidad" 
+                                       min="1" placeholder="0" required>
+                            </div>
+
+                            <hr>
+
+                            <div class="d-flex justify-content-between">
+                                <a href="/inventario" class="btn btn-secondary">
+                                    <i class="bi bi-arrow-left"></i> Cancelar
+                                </a>
+                                <button type="submit" class="btn btn-info text-white">
+                                    <i class="bi bi-check-circle"></i> Registrar Entrada
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-light border-top mt-5 py-4 text-center text-muted">
+        <p class="m-0">&copy; 2026 Grupo Castores. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

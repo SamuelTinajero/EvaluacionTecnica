@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ups! Algo salió mal</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+    <div class="container py-5 mt-5 text-center">
+        <div class="card shadow p-5">
+            <h1 class="display-1 text-danger"><i class="bi bi-exclamation-triangle-fill"></i></h1>
+            <h2 class="mb-4">¡Ups! Algo salió mal</h2>
+            <p class="lead">Lo sentimos, ha ocurrido un error inesperado en el sistema.</p>
+            <hr>
+            <div class="my-4">
+                <a href="/home" class="btn btn-primary btn-lg">
+                    <i class="bi bi-house-door"></i> Volver al Inicio
+                </a>
+            </div>
+            <p class="text-muted small">Código de error: <span th:text="${status}">500</span></p>
+        </div>
+    </div>
+</body>
+</html>

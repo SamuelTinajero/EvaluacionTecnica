@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario - Castores Inventario</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1a5490;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/home">
+                <i class="bi bi-box2"></i> Castores Inventario
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item" sec:authorize="hasRole('ADMINISTRADOR')">
+                        <a class="nav-link" href="/inventario">Inventario</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('ADMINISTRADOR')">
+                        <a class="nav-link" href="/productos/nuevo">Nuevo Producto</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('ADMINISTRADOR')">
+                        <a class="nav-link" href="/inventario/entrada">Entradas</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('ADMINISTRADOR')">
+                        <a class="nav-link" href="/movimientos">Historial</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('ALMACENISTA')">
+                        <a class="nav-link" href="/inventario">Inventario</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('ALMACENISTA')">
+                        <a class="nav-link" href="/inventario/salida">Salidas</a>
+                    </li>
+                    <li class="nav-item ms-3">
+                        <span class="text-white">
+                            <sec:authentication name="principal.correo" />
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <form th:action="@{/logout}" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-outline-light btn-sm ms-2">
+                                <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container-fluid my-4">
+        <div th:if="${exito}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> <span th:text="${exito}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-circle"></i> <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h2><i class="bi bi-boxes"></i> Inventario de Productos</h2>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="/productos/nuevo" class="btn btn-success btn-sm" sec:authorize="hasRole('ADMINISTRADOR')">
+                    <i class="bi bi-plus-circle"></i> Nuevo Producto
+                </a>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th class="text-end">Stock</th>
+                        <th class="text-center">Estatus</th>
+                        <th class="text-center" sec:authorize="hasRole('ADMINISTRADOR')">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="producto : ${productos}">
+                        <td th:text="${producto.idProducto}"></td>
+                        <td th:text="${producto.nombre}"></td>
+                        <td th:text="${producto.descripcion}"></td>
+                        <td class="text-end">
+                            <strong th:text="${producto.stock}"></strong>
+                        </td>
+                        <td class="text-center">
+                            <span th:if="${producto.estatus == 1}" class="badge bg-success">Activo</span>
+                            <span th:if="${producto.estatus == 0}" class="badge bg-danger">Inactivo</span>
+                        </td>
+                        <td class="text-center" sec:authorize="hasRole('ADMINISTRADOR')">
+                            <a th:href="@{/productos/editar/{id}(id=${producto.idProducto})}"
+                                class="btn btn-info btn-sm me-1 text-white shadow-sm" title="Editar Producto">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <form th:if="${producto.estatus == 1}"
+                                th:action="@{/productos/baja/{id}(id=${producto.idProducto})}" method="post"
+                                class="d-inline">
+                                <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('¿Dar de baja este producto?')">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                            <form th:if="${producto.estatus == 0}"
+                                th:action="@{/productos/reactivar/{id}(id=${producto.idProducto})}" method="post"
+                                class="d-inline">
+                                <button type="submit" class="btn btn-warning btn-sm">
+                                    <i class="bi bi-arrow-counterclockwise"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(productos)}">
+                        <td th:colspan="${#authorization.expression('hasRole(''ADMINISTRADOR'')')} ? 6 : 5"
+                            class="text-center text-muted py-4">
+                            <i class="bi bi-inbox"></i> No hay productos registrados
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer class="bg-light border-top mt-5 py-4 text-center text-muted">
+        <p class="m-0">&copy; 2026 Grupo Castores. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
